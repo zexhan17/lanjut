@@ -101,8 +101,8 @@ function PdfHeader(props: { header: HeaderView }) {
         </View>
       </View>
       <View style={styles.headerRight}>
-        {props.header.contacts.map((contact) => (
-          <View key={contact.kind} style={styles.contactRow}>
+        {props.header.contacts.map((contact, index) => (
+          <View key={`${contact.kind}-${index}`} style={styles.contactRow}>
             {props.header.showIcons ? (
               <PdfContactIcon kind={contact.kind} />
             ) : null}

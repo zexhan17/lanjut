@@ -18,9 +18,9 @@ export function ResumeHeader(props: HeaderView) {
       </div>
 
       <ul className="space-y-1 resume-body-xs">
-        {props.contacts.map((contact) => (
+        {props.contacts.map((contact, index) => (
           <ResumeHeaderContact
-            key={contact.kind}
+            key={`${contact.kind}-${index}`}
             showIcons={props.showIcons}
             {...contact}
           />

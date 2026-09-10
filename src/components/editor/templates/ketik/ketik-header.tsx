@@ -16,7 +16,7 @@ export function KetikHeader(props: HeaderView) {
         {props.contacts.length > 0 && (
           <p className="mt-1.5 resume-body-xs text-muted-foreground">
             {props.contacts.map((contact, index) => (
-              <Fragment key={contact.kind}>
+              <Fragment key={`${contact.kind}-${index}`}>
                 {index > 0 && <span aria-hidden> | </span>}
                 {contact.href ? (
                   <a href={contact.href} className="underline">

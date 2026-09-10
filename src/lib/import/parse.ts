@@ -81,6 +81,7 @@ function richFromLines(lines: string[]): Field {
 
 const EMAIL_RE = /[\w.+-]+@[\w-]+\.[\w.-]+/;
 const LINKEDIN_RE = /(?:https?:\/\/)?(?:www\.)?linkedin\.com\/in\/[\w%-]+/i;
+const GITHUB_RE = /(?:https?:\/\/)?(?:www\.)?github\.com\/[\w%-]+/i;
 const URL_RE = /(?:https?:\/\/|www\.)[^\s|]+/i;
 const URL_G_RE = /(?:https?:\/\/|www\.)[^\s|]+/gi;
 const PHONE_RE = /\+?\d[\d\s().-]{7,}\d/;
@@ -89,6 +90,7 @@ function isContactLine(line: string): boolean {
   return (
     EMAIL_RE.test(line) ||
     LINKEDIN_RE.test(line) ||
+    GITHUB_RE.test(line) ||
     URL_RE.test(line) ||
     PHONE_RE.test(line)
   );
@@ -125,19 +127,24 @@ function fillHeader(
 
   const email = allText.match(EMAIL_RE)?.[0];
   const linkedin = allText.match(LINKEDIN_RE)?.[0];
+  const github = allText.match(GITHUB_RE)?.[0];
   const phone = allText.match(PHONE_RE)?.[0];
   const website = (allText.match(URL_G_RE) ?? []).find(
-    (url) => !/linkedin\.com/i.test(url),
+    (url) => !/linkedin\.com/i.test(url) && !/github\.com/i.test(url),
   );
   // The extra link only comes from the preamble: anywhere else, a second URL
   // is far more likely a company or project site from an entry.
   const link = (preamble.join(" ").match(URL_G_RE) ?? []).find(
     (url) =>
-      !/linkedin\.com/i.test(url) && url !== website && !url.includes("@"),
+      !/linkedin\.com/i.test(url) &&
+      !/github\.com/i.test(url) &&
+      url !== website &&
+      !url.includes("@"),
   );
   if (email) fields.email = plain(email);
   if (phone) fields.phone = plain(phone);
   if (linkedin) fields.linkedin = plain(linkedin);
+  if (github) fields.github = plain(github);
   if (website) fields.website = plain(website);
   if (link) fields.link = plain(link);
 

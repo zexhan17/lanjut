@@ -79,16 +79,46 @@ export const HEADER_SCHEMA: FieldSchema[] = [
     placeholder: "https://doe.dev",
   },
   {
+    key: "websiteLabel",
+    label: "Website label",
+    kind: "plain",
+    placeholder: "Portfolio",
+  },
+  {
     key: "linkedin",
     label: "LinkedIn",
     kind: "plain",
     placeholder: "johndoe",
   },
   {
+    key: "linkedinLabel",
+    label: "LinkedIn label",
+    kind: "plain",
+    placeholder: "LinkedIn",
+  },
+  {
+    key: "github",
+    label: "GitHub",
+    kind: "plain",
+    placeholder: "johndoe",
+  },
+  {
+    key: "githubLabel",
+    label: "GitHub label",
+    kind: "plain",
+    placeholder: "GitHub",
+  },
+  {
     key: "link",
     label: "Link",
     kind: "plain",
-    placeholder: "github.com/johndoe",
+    placeholder: "https://...",
+  },
+  {
+    key: "linkLabel",
+    label: "Link label",
+    kind: "plain",
+    placeholder: "Custom Link",
   },
   { key: "city", label: "City", kind: "plain", placeholder: "San Francisco" },
   {

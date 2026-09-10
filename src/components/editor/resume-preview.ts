@@ -20,6 +20,7 @@ export type ContactKind =
   | "email"
   | "website"
   | "linkedin"
+  | "github"
   | "link"
   | "location";
 

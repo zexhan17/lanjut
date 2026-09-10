@@ -123,8 +123,8 @@ function KetatHeader(props: { header: HeaderView }) {
         </View>
       </View>
       <View style={styles.headerRight}>
-        {props.header.contacts.map((contact) => (
-          <View key={contact.kind} style={styles.contactRow}>
+        {props.header.contacts.map((contact, index) => (
+          <View key={`${contact.kind}-${index}`} style={styles.contactRow}>
             {contact.href ? (
               <Link src={contact.href} style={styles.linkPlain}>
                 {contact.value}

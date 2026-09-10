@@ -630,6 +630,44 @@ const migrateV21toV22: Migration = (doc) => {
 const migrateV22toV23: Migration = (doc) => structuredClone(doc);
 
 /**
+ * v23→v24: the header gains an optional `github` field. Existing documents gain
+ * it (empty) so the new personal-info input has somewhere to write. Bail-safe:
+ * a document without header fields, or one that already carries `github`, is
+ * left as-is.
+ */
+const migrateV23toV24: Migration = (doc) => {
+  const next = structuredClone(doc);
+  const header = next.header as
+    | { fields?: Record<string, unknown> }
+    | undefined;
+  if (G.isObject(header?.fields) && !("github" in header.fields)) {
+    header.fields.github = plainField("");
+  }
+  return next;
+};
+
+/**
+ * v24→v25: the header gains optional link label fields (`websiteLabel`,
+ * `linkedinLabel`, `githubLabel`, `linkLabel`). Existing documents gain them
+ * (empty) so custom display text can be authored. Bail-safe: missing header
+ * fields are left as-is, and existing keys are not overwritten.
+ */
+const migrateV24toV25: Migration = (doc) => {
+  const next = structuredClone(doc);
+  const header = next.header as
+    | { fields?: Record<string, unknown> }
+    | undefined;
+  if (G.isObject(header?.fields)) {
+    const hf = header.fields;
+    if (!("websiteLabel" in hf)) hf.websiteLabel = plainField("");
+    if (!("linkedinLabel" in hf)) hf.linkedinLabel = plainField("");
+    if (!("githubLabel" in hf)) hf.githubLabel = plainField("");
+    if (!("linkLabel" in hf)) hf.linkLabel = plainField("");
+  }
+  return next;
+};
+
+/**
  * The migration ladder. Each key N is a forward-only step from version N to N+1.
  */
 const LADDER: Record<number, Migration> = {
@@ -655,6 +693,8 @@ const LADDER: Record<number, Migration> = {
   20: migrateV20toV21,
   21: migrateV21toV22,
   22: migrateV22toV23,
+  23: migrateV23toV24,
+  24: migrateV24toV25,
 };
 
 /** The persisted schemaVersion of a raw document; 0 when absent or malformed. */

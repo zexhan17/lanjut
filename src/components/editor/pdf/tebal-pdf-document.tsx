@@ -107,8 +107,8 @@ function TebalHeader(props: { header: HeaderView }) {
         ) : null}
         {props.header.contacts.length > 0 ? (
           <View style={styles.contactRowWrap}>
-            {props.header.contacts.map((contact) => (
-              <View key={contact.kind} style={styles.contactRow}>
+            {props.header.contacts.map((contact, index) => (
+              <View key={`${contact.kind}-${index}`} style={styles.contactRow}>
                 {props.header.showIcons ? (
                   <PdfContactIcon kind={contact.kind} />
                 ) : null}

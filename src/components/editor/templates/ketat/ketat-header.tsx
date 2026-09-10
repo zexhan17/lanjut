@@ -33,9 +33,9 @@ export function KetatHeader(props: HeaderView) {
       </div>
 
       <ul className="space-y-1.5 resume-body-xs">
-        {props.contacts.map((contact) => (
+        {props.contacts.map((contact, index) => (
           <KetatHeaderContact
-            key={contact.kind}
+            key={`${contact.kind}-${index}`}
             showIcons={props.showIcons}
             {...contact}
           />

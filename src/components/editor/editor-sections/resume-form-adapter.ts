@@ -11,8 +11,13 @@ export interface PersonalFormValues {
   email: string;
   phone: string;
   website: string;
+  websiteLabel: string;
   linkedin: string;
+  linkedinLabel: string;
+  github: string;
+  githubLabel: string;
   link: string;
+  linkLabel: string;
   city: string;
   province: string;
   country: string;
@@ -160,8 +165,13 @@ export function toPersonalValues(resume: Resume): PersonalFormValues {
     email: plainValue(fields.email),
     phone: plainValue(fields.phone),
     website: plainValue(fields.website),
+    websiteLabel: plainValue(fields.websiteLabel),
     linkedin: plainValue(fields.linkedin),
+    linkedinLabel: plainValue(fields.linkedinLabel),
+    github: plainValue(fields.github),
+    githubLabel: plainValue(fields.githubLabel),
     link: plainValue(fields.link),
+    linkLabel: plainValue(fields.linkLabel),
     city: plainValue(fields.city),
     province: plainValue(fields.province),
     country: plainValue(fields.country),
@@ -179,8 +189,13 @@ export function applyPersonalValues(
   fields.email = plain(values.email);
   fields.phone = plain(values.phone);
   fields.website = plain(values.website);
+  fields.websiteLabel = plain(values.websiteLabel);
   fields.linkedin = plain(values.linkedin);
+  fields.linkedinLabel = plain(values.linkedinLabel);
+  fields.github = plain(values.github);
+  fields.githubLabel = plain(values.githubLabel);
   fields.link = plain(values.link);
+  fields.linkLabel = plain(values.linkLabel);
   fields.city = plain(values.city);
   fields.province = plain(values.province);
   fields.country = plain(values.country);

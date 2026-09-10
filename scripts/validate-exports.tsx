@@ -19,6 +19,7 @@ import JSZip from "jszip";
 import { extractText, getDocumentProxy } from "unpdf";
 import { buildAwalDocx } from "@/components/editor/docx/resume-to-docx";
 import { TEMPLATE_PDF_DOCUMENTS } from "@/components/editor/pdf/template-pdf-document";
+import { resumeToMarkdown } from "@/components/editor/resume-to-markdown";
 import { resumeToPreview } from "@/components/editor/resume-to-preview";
 import { resumeToText } from "@/components/editor/resume-to-text";
 import { SEED_RESUME } from "@/lib/resume/seed";
@@ -236,6 +237,7 @@ async function main(): Promise<void> {
 
   const outputs: [string, string][] = [
     ["TXT", resumeToText(preview)],
+    ["MD", resumeToMarkdown(preview)],
     [
       "DOCX",
       await extractDocxText(await Packer.toBuffer(buildAwalDocx(preview))),

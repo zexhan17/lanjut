@@ -1,6 +1,6 @@
 # Export validation
 
-The résumé exports (PDF, `.docx`, `.txt`) must stay **ATS-parseable**: real, selectable
+The résumé exports (PDF, `.docx`, `.txt`, `.md`) must stay **ATS-parseable**: real, selectable
 text in linear reading order, with every field mappable by a parser. Two layers of
 verification back this up.
 
@@ -10,9 +10,9 @@ verification back this up.
 pnpm validate:exports
 ```
 
-`scripts/validate-exports.tsx` regenerates all three exports from the seed résumé and
+`scripts/validate-exports.tsx` regenerates all exports from the seed résumé and
 extracts their text with real parsers: `unpdf` for the PDF, `jszip` for the `.docx`
-XML, and the serializer output for `.txt`. It then asserts:
+XML, and the serializer outputs for `.txt` and `.md`. It then asserts:
 
 - **Reading order**: `Summary → Experience → Education → Certificates → Skills →
   Languages` appears in that order in every format.
@@ -26,9 +26,9 @@ XML, and the serializer output for `.txt`. It then asserts:
 
 This is the pdftotext-equivalent text-extraction test required by `AGENTS.md`. **Run it
 after any change to an export path** (`pdf/`, `docx/`, `resume-to-text.ts`,
-`buildResumeBlocks`, or the rich-content model). It exits non-zero on failure.
+`resume-to-markdown.ts`, `buildResumeBlocks`, or the rich-content model). It exits non-zero on failure.
 
-Because all three exporters consume the same `buildResumeBlocks` sequence as the
+Because all exporters consume the same `buildResumeBlocks` sequence as the
 on-screen preview, passing here means content, ordering, sorting, and empty-section
 gating match across the preview and every output.
 

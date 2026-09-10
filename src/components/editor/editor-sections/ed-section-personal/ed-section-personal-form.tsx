@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { GithubInput } from "@/components/shared/github-input";
 import { LinkedinInput } from "@/components/shared/linkedin-input";
 import { PhoneNumberInput } from "@/components/shared/phone-number-input";
 import { UrlInput } from "@/components/shared/url-input";
@@ -152,57 +153,81 @@ export function EditorSectionPersonalForm() {
                 )}
               />
             </div>
-            <Controller
-              control={form.control}
-              name="website"
-              render={({ field, fieldState }) => (
-                <Field>
-                  <FieldLabel htmlFor={field.name}>{t("website")}</FieldLabel>
-                  <UrlInput
-                    id={field.name}
-                    value={field.value}
-                    placeholder={t("websitePlaceholder")}
-                    onChange={field.onChange}
-                    onBlur={field.onBlur}
-                  />
-                  <FieldError errors={[fieldState.error]} />
-                </Field>
-              )}
-            />
-            <Controller
-              control={form.control}
-              name="linkedin"
-              render={({ field, fieldState }) => (
-                <Field>
-                  <FieldLabel htmlFor={field.name}>{t("linkedin")}</FieldLabel>
-                  <LinkedinInput
-                    id={field.name}
-                    value={field.value}
-                    placeholder={t("linkedinPlaceholder")}
-                    onChange={field.onChange}
-                    onBlur={field.onBlur}
-                  />
-                  <FieldError errors={[fieldState.error]} />
-                </Field>
-              )}
-            />
-            <Controller
-              control={form.control}
-              name="link"
-              render={({ field, fieldState }) => (
-                <Field>
-                  <FieldLabel htmlFor={field.name}>{t("link")}</FieldLabel>
-                  <UrlInput
-                    id={field.name}
-                    value={field.value}
-                    placeholder={t("linkPlaceholder")}
-                    onChange={field.onChange}
-                    onBlur={field.onBlur}
-                  />
-                  <FieldError errors={[fieldState.error]} />
-                </Field>
-              )}
-            />
+            <div className="grid gap-6 2xl:grid-cols-2 2xl:gap-3">
+              <Controller
+                control={form.control}
+                name="website"
+                render={({ field, fieldState }) => (
+                  <Field>
+                    <FieldLabel htmlFor={field.name}>{t("website")}</FieldLabel>
+                    <UrlInput
+                      id={field.name}
+                      value={field.value}
+                      placeholder={t("websitePlaceholder")}
+                      onChange={field.onChange}
+                      onBlur={field.onBlur}
+                    />
+                    <FieldError errors={[fieldState.error]} />
+                  </Field>
+                )}
+              />
+              <Controller
+                control={form.control}
+                name="linkedin"
+                render={({ field, fieldState }) => (
+                  <Field>
+                    <FieldLabel htmlFor={field.name}>
+                      {t("linkedin")}
+                    </FieldLabel>
+                    <LinkedinInput
+                      id={field.name}
+                      value={field.value}
+                      placeholder={t("linkedinPlaceholder")}
+                      onChange={field.onChange}
+                      onBlur={field.onBlur}
+                    />
+                    <FieldError errors={[fieldState.error]} />
+                  </Field>
+                )}
+              />
+            </div>
+
+            <div className="grid gap-6 2xl:grid-cols-2 2xl:gap-3">
+              <Controller
+                control={form.control}
+                name="github"
+                render={({ field, fieldState }) => (
+                  <Field>
+                    <FieldLabel htmlFor={field.name}>{t("github")}</FieldLabel>
+                    <GithubInput
+                      id={field.name}
+                      value={field.value}
+                      placeholder={t("githubPlaceholder")}
+                      onChange={field.onChange}
+                      onBlur={field.onBlur}
+                    />
+                    <FieldError errors={[fieldState.error]} />
+                  </Field>
+                )}
+              />
+              <Controller
+                control={form.control}
+                name="link"
+                render={({ field, fieldState }) => (
+                  <Field>
+                    <FieldLabel htmlFor={field.name}>{t("link")}</FieldLabel>
+                    <UrlInput
+                      id={field.name}
+                      value={field.value}
+                      placeholder={t("linkPlaceholder")}
+                      onChange={field.onChange}
+                      onBlur={field.onBlur}
+                    />
+                    <FieldError errors={[fieldState.error]} />
+                  </Field>
+                )}
+              />
+            </div>
           </FieldGroup>
         </FieldSet>
 

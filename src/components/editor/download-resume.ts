@@ -44,6 +44,14 @@ export async function downloadResume(
     return;
   }
 
+  if (format === "md") {
+    const { downloadResumeMarkdown } = await import(
+      "./download-resume-markdown"
+    );
+    downloadResumeMarkdown(preview, fileName);
+    return;
+  }
+
   const { downloadResumeText } = await import("./download-resume-text");
   downloadResumeText(preview, fileName);
 }

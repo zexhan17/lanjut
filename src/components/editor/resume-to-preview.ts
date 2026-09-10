@@ -9,6 +9,7 @@ import {
 import type { Field, Resume, Section } from "@/lib/resume/types";
 import { localizeDateValue } from "./month-year-menu/month-year-menu-data";
 import type {
+  ContactKind,
   ContactView,
   CustomSectionView,
   HeaderView,
@@ -35,6 +36,18 @@ function sectionOfType(
 /** A stored URL is domain-only (see `UrlInput`); restore the scheme for links. */
 function withHttps(value: string): string {
   return /^https?:\/\//i.test(value) ? value : `https://${value}`;
+}
+
+/**
+ * Strips scheme (https?://), leading www., and trailing slashes for clean,
+ * ATS-safe semantic display text.
+ */
+function toDisplayUrl(value: string): string {
+  return value
+    .trim()
+    .replace(/^https?:\/\//i, "")
+    .replace(/^www\./i, "")
+    .replace(/\/+$/, "");
 }
 
 /** Font-size multiplier, defaulting to 1 and bounded to the editor's range. */
@@ -78,20 +91,49 @@ function toHeaderView(resume: Resume): HeaderView {
     contacts.push({ kind: "email", value: email, href: `mailto:${email}` });
   const website = plain(fields.website);
   if (website) {
-    // Show the full URL (scheme included): a bare domain isn't recognized as a
-    // link by résumé parsers, which look for http(s)://, www., or a path.
     const url = withHttps(website);
-    contacts.push({ kind: "website", value: url, href: url });
+    const label = plain(fields.websiteLabel);
+    contacts.push({
+      kind: "website",
+      value: label || toDisplayUrl(website),
+      href: url,
+    });
   }
   const linkedin = plain(fields.linkedin);
   if (linkedin) {
     const url = withHttps(linkedin);
-    contacts.push({ kind: "linkedin", value: url, href: url });
+    const label = plain(fields.linkedinLabel);
+    contacts.push({
+      kind: "linkedin",
+      value: label || toDisplayUrl(linkedin),
+      href: url,
+    });
+  }
+  const github = plain(fields.github);
+  if (github) {
+    const url = withHttps(github);
+    const label = plain(fields.githubLabel);
+    contacts.push({
+      kind: "github",
+      value: label || toDisplayUrl(github),
+      href: url,
+    });
   }
   const link = plain(fields.link);
   if (link) {
     const url = withHttps(link);
-    contacts.push({ kind: "link", value: url, href: url });
+    const label = plain(fields.linkLabel);
+    const lower = link.toLowerCase();
+    const kind: ContactKind = lower.includes("github.com")
+      ? "github"
+      : lower.includes("linkedin.com")
+        ? "linkedin"
+        : "link";
+    contacts.push({
+      kind,
+      value: label || toDisplayUrl(link),
+      href: url,
+    });
   }
   const location = [
     plain(fields.city),
