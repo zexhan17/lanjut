@@ -5,7 +5,7 @@ import type { JSONContent } from "@tiptap/core";
  * governs object-store/index structure only. Bumped whenever a persisted field
  * shape changes; every bump gets a forward-only step in the migration ladder.
  */
-export const CURRENT_SCHEMA_VERSION = 25;
+export const CURRENT_SCHEMA_VERSION = 26;
 
 /** The language the rendered document's fixed labels (headings, dates) use. */
 export type ResumeLanguage = "en" | "id";
@@ -206,10 +206,28 @@ export interface Resume {
   bodyScale?: number;
   header: Header;
   sections: Section[];
+  /** Optional paired cover letter matching this résumé's template and header. */
+  coverLetter?: CoverLetter;
   /** ISO 8601. */
   createdAt: string;
   /** ISO 8601. */
   updatedAt: string;
+}
+
+/**
+ * A cover letter document paired with a résumé, sharing its header, font,
+ * and template styling.
+ */
+export interface CoverLetter {
+  recipientName?: string;
+  recipientTitle?: string;
+  companyName?: string;
+  companyAddress?: string;
+  date?: string;
+  salutation?: string;
+  body?: RichTextField;
+  signoff?: string;
+  signatureName?: string;
 }
 
 /**

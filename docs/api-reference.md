@@ -15,7 +15,7 @@ Lanjut provides a headless HTTP API to validate, migrate, and render resumes int
 
 ## 2. Endpoints
 
-### 2.1. Dedicated PDF Exporter: `POST /api/export/pdf`
+### 2.1. Dedicated Resume PDF Exporter: `POST /api/export/pdf`
 
 Renders and returns a binary PDF stream for the given template and resume data.
 
@@ -34,9 +34,29 @@ Renders and returns a binary PDF stream for the given template and resume data.
 
 ---
 
-### 2.2. Multi-Format Exporter: `POST /api/export`
+### 2.2. Dedicated Cover Letter Exporter: `POST /api/export/cover-letter`
 
-Renders and returns the resume in any supported output format.
+Renders and returns the matching Cover Letter (defaulting to PDF stream, or any requested format).
+
+* **Method**: `POST`
+* **Path**: `/api/export/cover-letter`
+* **Headers**: `Content-Type: application/json`
+* **Response**: `200 OK`
+
+#### Request Body Schema
+
+| Field | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| `template` | `string` | No | `"awal"` | Template style: `"awal"`, `"ketat"`, `"luasa"`, `"tebal"`, `"klasik"`, `"ketik"`. |
+| `format` | `string` | No | `"pdf"` | Output format: `"pdf"`, `"docx"`, `"md"`, `"txt"`, `"json"`, `"yaml"`. |
+| `fileName` | `string` | No | `"${resume.title}-cover-letter"` | Base file name for `Content-Disposition`. |
+| `resume` | `object` | **Yes** | — | The Resume JSON object containing `coverLetter`. |
+
+---
+
+### 2.3. Multi-Format Exporter: `POST /api/export`
+
+Renders and returns the resume or cover letter in any supported output format.
 
 * **Method**: `POST`
 * **Path**: `/api/export`
@@ -46,9 +66,10 @@ Renders and returns the resume in any supported output format.
 
 | Field | Type | Required | Default | Description |
 | :--- | :--- | :--- | :--- | :--- |
+| `type` | `string` | No | `"resume"` | Document type: `"resume"` or `"cover-letter"`. |
 | `format` | `string` | No | `"pdf"` | Output format: `"pdf"`, `"docx"`, `"md"`, `"txt"`, `"json"`, `"yaml"`. |
-| `template` | `string` | No | `"awal"` | Template style (used primarily for PDF styling). |
-| `fileName` | `string` | No | `resume.title` | Base file name for `Content-Disposition`. |
+| `template` | `string` | No | `"awal"` | Template style: `"awal"`, `"ketat"`, `"luasa"`, `"tebal"`, `"klasik"`, `"ketik"`. |
+| `fileName` | `string` | No | Auto | Base file name for `Content-Disposition`. |
 | `resume` | `object` | **Yes** | — | The full Resume JSON object. |
 
 #### Supported Formats & MIME Types
@@ -59,8 +80,8 @@ Renders and returns the resume in any supported output format.
 | `docx` | `application/vnd.openxmlformats-officedocument.wordprocessingml.document` | Binary Microsoft Word `.docx` |
 | `md` | `text/markdown; charset=utf-8` | GitHub-Flavored Markdown with contact icons & links |
 | `txt` | `text/plain; charset=utf-8` | Clean linear plain text |
-| `json` | `application/json; charset=utf-8` | Formatted Resume JSON (migrated to latest schema) |
-| `yaml` | `application/x-yaml; charset=utf-8` | Formatted Resume YAML |
+| `json` | `application/json; charset=utf-8` | Formatted JSON (migrated to latest schema) |
+| `yaml` | `application/x-yaml; charset=utf-8` | Formatted YAML |
 
 ---
 
@@ -102,6 +123,18 @@ curl -X POST http://localhost:3000/api/export \
     "resume": '"$(cat my-resume.json)"'
   }' \
   --output resume.md
+```
+
+```bash
+# Export matching Cover Letter PDF
+curl -X POST http://localhost:3000/api/export/cover-letter \
+  -H "Content-Type: application/json" \
+  -d '{
+    "template": "ketat",
+    "fileName": "John-Doe-Cover-Letter",
+    "resume": '"$(cat my-resume.json)"'
+  }' \
+  --output John-Doe-Cover-Letter.pdf
 ```
 
 ---
@@ -291,7 +324,31 @@ Below is the minimal valid schema structure expected by the API.
         }
       ]
     }
-  ]
+  ],
+  "coverLetter": {
+    "recipientName": "Jane Doe",
+    "recipientTitle": "Head of Engineering",
+    "companyName": "Acme Corporation",
+    "companyAddress": "San Francisco, CA",
+    "date": "October 24, 2026",
+    "salutation": "Dear Hiring Team,",
+    "body": {
+      "kind": "richtext",
+      "value": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              { "type": "text", "text": "I am writing to express my strong interest in the Senior Frontend Engineer position at Acme Corporation..." }
+            ]
+          }
+        ]
+      }
+    },
+    "signoff": "Sincerely,",
+    "signatureName": "John Doe"
+  }
 }
 ```
 

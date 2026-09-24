@@ -17,10 +17,15 @@ export function useResumeExporter() {
   const resolverRef = useRef<((ok: boolean) => void) | null>(null);
 
   const runExport = useCallback(
-    (resume: Resume, format: ExportFormat, fileName: string) =>
+    (
+      resume: Resume,
+      format: ExportFormat,
+      fileName: string,
+      type?: "resume" | "cover-letter",
+    ) =>
       new Promise<boolean>((resolve) => {
         resolverRef.current = resolve;
-        setRequest({ resume, format, fileName });
+        setRequest({ resume, format, fileName, type });
       }),
     [],
   );

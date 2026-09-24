@@ -1,8 +1,8 @@
 import type { JSONContent } from "@tiptap/core";
-import type { Field, Resume } from "./types";
+import type { PlainField, Resume, RichTextField } from "./types";
 import { CURRENT_SCHEMA_VERSION } from "./types";
 
-function plain(value: string): Field {
+function plain(value: string): PlainField {
   return { kind: "plain", value };
 }
 
@@ -34,7 +34,7 @@ function ul(...items: JSONContent[]): JSONContent {
   return { type: "bulletList", content: items };
 }
 
-function prose(...blocks: JSONContent[]): Field {
+function prose(...blocks: JSONContent[]): RichTextField {
   return { kind: "richtext", value: { type: "doc", content: blocks } };
 }
 
@@ -518,4 +518,31 @@ export const SEED_RESUME: Resume = {
       ],
     },
   ],
+  coverLetter: {
+    recipientName: "Hiring Team",
+    recipientTitle: "Engineering Leadership",
+    companyName: "Acme Corporation",
+    companyAddress: "San Francisco, CA",
+    date: "September 10, 2026",
+    salutation: "Dear Hiring Team,",
+    body: prose(
+      p(
+        t(
+          "I am writing to express my strong interest in the Senior Frontend Engineer position at Acme Corporation. With over 8 years of experience engineering accessible, high-performance web applications with React, Next.js, and TypeScript, I am confident in my ability to make an immediate, meaningful impact on your product engineering team.",
+        ),
+      ),
+      p(
+        t(
+          "In my current role at Acme Corp, I led the migration of a 200k-line frontend codebase to a typed component library, which reduced UI regression defects by 40% and improved Core Web Vitals to green across all customer flows. I also established the organization's WCAG 2.1 AA accessibility program, ensuring our applications are inclusive and compliant for all users.",
+        ),
+      ),
+      p(
+        t(
+          "Acme Corporation's commitment to high engineering standards and seamless user experience strongly aligns with my professional focus. I look forward to the opportunity to discuss how my technical leadership and hands-on architecture background can contribute to your continued growth.",
+        ),
+      ),
+    ),
+    signoff: "Sincerely,",
+    signatureName: "John Doe",
+  },
 };

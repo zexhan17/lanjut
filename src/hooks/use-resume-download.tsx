@@ -10,9 +10,13 @@ export function useResumeDownload() {
   const { runExport, exporting, exporter } = useResumeExporter();
 
   const download = useCallback(
-    (format: ExportFormat, fileName: string) => {
+    (
+      format: ExportFormat,
+      fileName: string,
+      type?: "resume" | "cover-letter",
+    ) => {
       if (!resume) return Promise.resolve(false);
-      return runExport(resume, format, fileName);
+      return runExport(resume, format, fileName, type);
     },
     [resume, runExport],
   );

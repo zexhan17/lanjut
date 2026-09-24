@@ -1,9 +1,16 @@
 "use client";
 
+import { FileText, Mail } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { type EditorTab, useEditorChromeStore } from "@/lib/store";
+import {
+  type DocumentMode,
+  type EditorTab,
+  useEditorChromeStore,
+} from "@/lib/store";
 import { ScrollArea } from "../ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
+import { CoverLetterForm } from "./cover-letter/cover-letter-form";
 import { EditorDocumentPanel } from "./editor-document-panel";
 import { EditorImportLeftovers } from "./editor-import-leftovers";
 import { EditorLayoutTemplateList } from "./editor-layout/ed-layout-template-list";
@@ -23,6 +30,10 @@ export function EditorSidebarContent() {
   const t = useTranslations("editor.chrome");
   const tab = useEditorChromeStore((state) => state.activeTab);
   const setActiveTab = useEditorChromeStore((state) => state.setActiveTab);
+  const documentMode = useEditorChromeStore((state) => state.documentMode);
+  const setDocumentMode = useEditorChromeStore(
+    (state) => state.setDocumentMode,
+  );
 
   const onTabChange = (next: string) => setActiveTab(next as EditorTab);
 
@@ -46,13 +57,44 @@ export function EditorSidebarContent() {
 
         <TabsContent value="editor">
           <ScrollArea id="tour-editor-sections" className={PANEL_HEIGHT}>
-            <div className="flex items-center justify-end px-4 pt-4">
-              <h3 className="text-sm font-medium sr-only">
-                {t("sectionsHeading")}
-              </h3>
-              <EditorSectionOrderReset />
+            <div className="px-4 pt-4">
+              <ToggleGroup
+                variant="outline"
+                spacing={0}
+                className="w-full"
+                value={[documentMode]}
+                onValueChange={(value) => {
+                  const next = value[0] as DocumentMode | undefined;
+                  if (next) setDocumentMode(next);
+                }}
+              >
+                <ToggleGroupItem value="resume" className="flex-1 text-xs">
+                  <FileText className="mr-1.5 size-3.5" />
+                  {t("modeResume")}
+                </ToggleGroupItem>
+                <ToggleGroupItem
+                  value="cover-letter"
+                  className="flex-1 text-xs"
+                >
+                  <Mail className="mr-1.5 size-3.5" />
+                  {t("modeCoverLetter")}
+                </ToggleGroupItem>
+              </ToggleGroup>
             </div>
-            <EditorSectionList />
+
+            {documentMode === "resume" ? (
+              <>
+                <div className="flex items-center justify-end px-4 pt-2">
+                  <h3 className="text-sm font-medium sr-only">
+                    {t("sectionsHeading")}
+                  </h3>
+                  <EditorSectionOrderReset />
+                </div>
+                <EditorSectionList />
+              </>
+            ) : (
+              <CoverLetterForm />
+            )}
           </ScrollArea>
         </TabsContent>
 

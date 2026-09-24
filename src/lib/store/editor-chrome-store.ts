@@ -10,9 +10,13 @@ export type EditorTab = "editor" | "layout" | "document";
  * walks the tabs, mirroring how `useSidebarStore.ensureVisible` lets the tour
  * open the platform sidebar.
  */
+export type DocumentMode = "resume" | "cover-letter";
+
 interface EditorChromeState {
   activeTab: EditorTab;
   setActiveTab: (tab: EditorTab) => void;
+  documentMode: DocumentMode;
+  setDocumentMode: (mode: DocumentMode) => void;
   /** Only meaningful below xl, where the sidebar renders as a sheet. */
   sheetOpen: boolean;
   setSheetOpen: (open: boolean) => void;
@@ -21,6 +25,8 @@ interface EditorChromeState {
 export const useEditorChromeStore = create<EditorChromeState>()((set) => ({
   activeTab: "editor",
   setActiveTab: (activeTab) => set({ activeTab }),
+  documentMode: "resume",
+  setDocumentMode: (documentMode) => set({ documentMode }),
   sheetOpen: false,
   setSheetOpen: (sheetOpen) => set({ sheetOpen }),
 }));

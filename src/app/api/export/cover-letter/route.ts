@@ -7,7 +7,7 @@ export const runtime = "nodejs";
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { resume, template, format, fileName, type } = body;
+    const { resume, template, format = "pdf", fileName } = body;
 
     if (!resume || typeof resume !== "object") {
       return NextResponse.json(
@@ -20,7 +20,7 @@ export async function POST(req: Request) {
       template,
       format: format as ExportFormat,
       fileName,
-      type: type as "resume" | "cover-letter" | undefined,
+      type: "cover-letter",
     });
 
     const bodyData =
@@ -36,7 +36,7 @@ export async function POST(req: Request) {
   } catch (error) {
     return NextResponse.json(
       {
-        error: "Failed to export resume",
+        error: "Failed to export cover letter",
         message: error instanceof Error ? error.message : String(error),
       },
       { status: 422 },

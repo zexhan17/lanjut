@@ -2,8 +2,10 @@
 
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { type ReactNode, useMemo } from "react";
-import { useResumeStore } from "@/lib/store";
+import { useEditorChromeStore, useResumeStore } from "@/lib/store";
 import { resolveTemplateId } from "@/lib/templates";
+import { CoverLetterDocument } from "./cover-letter/cover-letter-document";
+import { coverLetterToPreview } from "./cover-letter/cover-letter-preview";
 import { EditorResumeNotFound } from "./editor-resume-not-found";
 import { ResumeDocument } from "./resume-document";
 import { resumeToPreview } from "./resume-to-preview";
@@ -11,15 +13,21 @@ import { resumeToPreview } from "./resume-to-preview";
 /**
  * The paper preview, driven by the open résumé in the store. `EditorPanels`
  * owns loading the document (`useEditorResume`), so this only reads `open` and
- * projects it through the `resumeToPreview` adapter into the résumé's template.
+ * projects it through either `resumeToPreview` or `coverLetterToPreview`.
  *
- * The paper is keyed by résumé id: entering a résumé (first load or switching
- * via the sidebar) animates it in, while in-place edits never remount it.
+ * The paper is keyed by résumé id and document mode: switching document modes
+ * or resumes animates smoothly, while in-place edits never remount it.
  */
 export function EditorResumePreview() {
   const open = useResumeStore((state) => state.open);
   const openStatus = useResumeStore((state) => state.openStatus);
+  const documentMode = useEditorChromeStore((state) => state.documentMode);
+
   const preview = useMemo(() => (open ? resumeToPreview(open) : null), [open]);
+  const coverLetterPreview = useMemo(
+    () => (open ? coverLetterToPreview(open) : null),
+    [open],
+  );
 
   return (
     <AnimatePresence mode="wait">
@@ -31,8 +39,19 @@ export function EditorResumePreview() {
         <PreviewFade key="skeleton">
           <PreviewSkeleton />
         </PreviewFade>
+      ) : documentMode === "cover-letter" && coverLetterPreview ? (
+        <PreviewEnter key={`${open.id}-cover-letter`}>
+          <PreviewContentReveal>
+            <div data-template={resolveTemplateId(open.templateId)}>
+              <CoverLetterDocument
+                preview={coverLetterPreview}
+                template={resolveTemplateId(open.templateId)}
+              />
+            </div>
+          </PreviewContentReveal>
+        </PreviewEnter>
       ) : (
-        <PreviewEnter key={open.id}>
+        <PreviewEnter key={`${open.id}-resume`}>
           <PreviewContentReveal>
             <div data-template={resolveTemplateId(open.templateId)}>
               <ResumeDocument

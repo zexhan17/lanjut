@@ -1,7 +1,14 @@
 import type { JSONContent } from "@tiptap/core";
 import { nanoid } from "nanoid";
 import { emptyRichTextValue } from "@/lib/resume";
-import type { Entry, Field, Resume, Section } from "@/lib/resume/types";
+import type {
+  Entry,
+  Field,
+  PlainField,
+  Resume,
+  RichTextField,
+  Section,
+} from "@/lib/resume/types";
 import { byRecency } from "../resume-sort";
 
 export interface PersonalFormValues {
@@ -129,11 +136,11 @@ function richValue(field: Field | undefined): JSONContent {
   return field?.kind === "richtext" ? field.value : emptyRichTextValue();
 }
 
-function plain(value: string): Field {
+function plain(value: string): PlainField {
   return { kind: "plain", value };
 }
 
-function rich(value: JSONContent): Field {
+function rich(value: JSONContent): RichTextField {
   return { kind: "richtext", value };
 }
 
@@ -581,4 +588,48 @@ export function applyCustomListValues(
       description: rich(item.description),
     },
   }));
+}
+
+export interface CoverLetterFormValues {
+  recipientName: string;
+  recipientTitle: string;
+  companyName: string;
+  companyAddress: string;
+  date: string;
+  salutation: string;
+  body: JSONContent;
+  signoff: string;
+  signatureName: string;
+}
+
+export function toCoverLetterValues(resume: Resume): CoverLetterFormValues {
+  const cl = resume.coverLetter;
+  return {
+    recipientName: cl?.recipientName ?? "",
+    recipientTitle: cl?.recipientTitle ?? "",
+    companyName: cl?.companyName ?? "",
+    companyAddress: cl?.companyAddress ?? "",
+    date: cl?.date ?? "",
+    salutation: cl?.salutation ?? "Dear Hiring Team,",
+    body: cl?.body?.value ?? emptyRichTextValue(),
+    signoff: cl?.signoff ?? "Sincerely,",
+    signatureName: cl?.signatureName ?? "",
+  };
+}
+
+export function applyCoverLetterValues(
+  draft: Resume,
+  values: CoverLetterFormValues,
+): void {
+  draft.coverLetter = {
+    recipientName: values.recipientName,
+    recipientTitle: values.recipientTitle,
+    companyName: values.companyName,
+    companyAddress: values.companyAddress,
+    date: values.date,
+    salutation: values.salutation,
+    body: rich(values.body),
+    signoff: values.signoff,
+    signatureName: values.signatureName,
+  };
 }

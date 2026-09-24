@@ -668,6 +668,15 @@ const migrateV24toV25: Migration = (doc) => {
 };
 
 /**
+ * v25→v26: documents gain an optional `coverLetter` sub-document matching the
+ * résumé's template, language, and styling. Bail-safe: if already present, kept untouched.
+ */
+const migrateV25toV26: Migration = (doc) => {
+  const next = structuredClone(doc);
+  return next;
+};
+
+/**
  * The migration ladder. Each key N is a forward-only step from version N to N+1.
  */
 const LADDER: Record<number, Migration> = {
@@ -695,6 +704,7 @@ const LADDER: Record<number, Migration> = {
   22: migrateV22toV23,
   23: migrateV23toV24,
   24: migrateV24toV25,
+  25: migrateV25toV26,
 };
 
 /** The persisted schemaVersion of a raw document; 0 when absent or malformed. */

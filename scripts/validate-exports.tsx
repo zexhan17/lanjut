@@ -17,7 +17,12 @@ import {
 import { Packer } from "docx";
 import JSZip from "jszip";
 import { extractText, getDocumentProxy } from "unpdf";
+import { coverLetterToPreview } from "@/components/editor/cover-letter/cover-letter-preview";
+import { coverLetterToMarkdown } from "@/components/editor/cover-letter/cover-letter-to-markdown";
+import { coverLetterToText } from "@/components/editor/cover-letter/cover-letter-to-text";
+import { buildCoverLetterDocx } from "@/components/editor/docx/cover-letter-to-docx";
 import { buildAwalDocx } from "@/components/editor/docx/resume-to-docx";
+import { COVER_LETTER_PDF_DOCUMENTS } from "@/components/editor/pdf/cover-letter/template-cover-letter-pdf";
 import { TEMPLATE_PDF_DOCUMENTS } from "@/components/editor/pdf/template-pdf-document";
 import { resumeToMarkdown } from "@/components/editor/resume-to-markdown";
 import { resumeToPreview } from "@/components/editor/resume-to-preview";
@@ -260,6 +265,48 @@ async function main(): Promise<void> {
   for (const [label, text] of outputs) {
     console.log(`${label}: extracted ${text.length} chars`);
     errors.push(...checkReadingOrder(text, label), ...checkFields(text, label));
+  }
+
+  // Validate Cover Letter exports
+  const clPreview = coverLetterToPreview(SEED_RESUME);
+  const clOutputs: [string, string][] = [
+    ["CoverLetter TXT", coverLetterToText(clPreview)],
+    ["CoverLetter MD", coverLetterToMarkdown(clPreview)],
+    [
+      "CoverLetter DOCX",
+      await extractDocxText(
+        await Packer.toBuffer(buildCoverLetterDocx(clPreview)),
+      ),
+    ],
+  ];
+
+  for (const [template, PdfDocument] of Object.entries(
+    COVER_LETTER_PDF_DOCUMENTS,
+  )) {
+    clOutputs.push([
+      `CoverLetter PDF(${template})`,
+      await extractPdfText(
+        await renderToBuffer(<PdfDocument preview={clPreview} />),
+      ),
+    ]);
+  }
+
+  const CL_REQUIRED_FIELDS = [
+    "John Doe",
+    "Acme Corporation",
+    "Dear Hiring Team",
+    "Senior Frontend Engineer",
+    "Sincerely",
+  ];
+
+  for (const [label, text] of clOutputs) {
+    console.log(`${label}: extracted ${text.length} chars`);
+    const haystack = text.toUpperCase();
+    for (const field of CL_REQUIRED_FIELDS) {
+      if (!haystack.includes(field.toUpperCase())) {
+        errors.push(`${label}: field "${field}" not found in extracted text`);
+      }
+    }
   }
 
   // The opt-in photo is presentation-only: with a photo present, the extracted

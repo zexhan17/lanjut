@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import type { Resume } from "@/lib/resume";
+import { downloadCoverLetter } from "./download-cover-letter";
 import { downloadResume } from "./download-resume";
 import type { ExportFormat } from "./export-format";
 
@@ -9,6 +10,7 @@ export interface ResumeExportRequest {
   resume: Resume;
   format: ExportFormat;
   fileName: string;
+  type?: "resume" | "cover-letter";
 }
 
 interface ResumeExporterProps {
@@ -28,7 +30,9 @@ export function ResumeExporter({ request, onSettled }: ResumeExporterProps) {
   useEffect(() => {
     if (startedFor.current === request) return;
     startedFor.current = request;
-    downloadResume(request.resume, request.format, request.fileName)
+    const downloadFn =
+      request.type === "cover-letter" ? downloadCoverLetter : downloadResume;
+    downloadFn(request.resume, request.format, request.fileName)
       .then(() => onSettled(true))
       .catch(() => onSettled(false));
   }, [request, onSettled]);
