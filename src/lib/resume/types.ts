@@ -138,7 +138,7 @@ export interface Resume {
    * Presentation-only toggle for the header's contact icons: when false, icon
    * glyphs are omitted from the preview and PDF export. Contact text is always
    * kept, so parsing and text exports are unaffected. Renderers treat an unset
-   * value as `true`; templates that never draw icons ignore it.
+   * value as `true`.
    */
   showIcons?: boolean;
   /**

@@ -7,11 +7,10 @@ import {
   View,
 } from "@react-pdf/renderer";
 import type { CoverLetterPreview } from "../../cover-letter/cover-letter-preview";
-import type { ContactView } from "../../resume-preview";
+import { PdfContactIcon } from "../pdf-contact-icon";
 import {
   type FontScales,
   fontScales,
-  NO_SCALE,
   PdfFontContext,
   PdfStylesContext,
   pdfTypography,
@@ -42,8 +41,16 @@ const makeStyles = (s: FontScales) =>
       fontSize: 10 * s.name,
       color: PDF_COLORS.muted,
     },
-    contactLine: {
+    contactRowWrap: {
       marginTop: 4,
+      flexDirection: "row",
+      flexWrap: "wrap",
+      gap: 8,
+    },
+    contactRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 3,
       fontFamily: "GeistMono",
       fontSize: 8.5 * s.body,
       color: PDF_COLORS.muted,
@@ -98,35 +105,6 @@ const makeStyles = (s: FontScales) =>
     },
   });
 
-function KetikContactLine(props: { contacts: ContactView[] }) {
-  return (
-    <Text
-      style={{
-        marginTop: 4,
-        fontFamily: "GeistMono",
-        fontSize: 8.5,
-        color: PDF_COLORS.muted,
-      }}
-    >
-      {props.contacts.map((contact, index) => (
-        <Text key={contact.kind}>
-          {index > 0 ? " | " : ""}
-          {contact.href ? (
-            <Link
-              src={contact.href}
-              style={{ color: PDF_COLORS.muted, textDecoration: "underline" }}
-            >
-              {contact.value}
-            </Link>
-          ) : (
-            contact.value
-          )}
-        </Text>
-      ))}
-    </Text>
-  );
-}
-
 export function KetikCoverLetterPdf(props: { preview: CoverLetterPreview }) {
   const { preview } = props;
   const typography = pdfTypography(preview);
@@ -162,7 +140,25 @@ export function KetikCoverLetterPdf(props: { preview: CoverLetterPreview }) {
                   </Text>
                 ) : null}
                 {preview.header.contacts.length > 0 ? (
-                  <KetikContactLine contacts={preview.header.contacts} />
+                  <View style={styles.contactRowWrap}>
+                    {preview.header.contacts.map((contact, index) => (
+                      <View
+                        key={`${contact.kind}-${index}`}
+                        style={styles.contactRow}
+                      >
+                        {preview.header.showIcons ? (
+                          <PdfContactIcon kind={contact.kind} />
+                        ) : null}
+                        {contact.href ? (
+                          <Link src={contact.href} style={styles.linkMuted}>
+                            {contact.value}
+                          </Link>
+                        ) : (
+                          <Text>{contact.value}</Text>
+                        )}
+                      </View>
+                    ))}
+                  </View>
                 ) : null}
               </View>
             </View>

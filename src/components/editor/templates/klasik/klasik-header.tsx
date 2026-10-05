@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { ResumeHeaderContact } from "../../resume-header-contact";
 import { ResumeHeaderPhoto } from "../../resume-header-photo";
 import type { HeaderView } from "../../resume-preview";
 
@@ -13,20 +13,15 @@ export function KlasikHeader(props: HeaderView) {
         </p>
       )}
       {props.contacts.length > 0 && (
-        <p className="mt-1.5 resume-body-xs text-muted-foreground">
+        <ul className="mt-1.5 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 resume-body-xs text-muted-foreground">
           {props.contacts.map((contact, index) => (
-            <Fragment key={`${contact.kind}-${index}`}>
-              {index > 0 && <span aria-hidden> · </span>}
-              {contact.href ? (
-                <a href={contact.href} className="underline">
-                  {contact.value}
-                </a>
-              ) : (
-                <span>{contact.value}</span>
-              )}
-            </Fragment>
+            <ResumeHeaderContact
+              key={`${contact.kind}-${index}`}
+              showIcons={props.showIcons}
+              {...contact}
+            />
           ))}
-        </p>
+        </ul>
       )}
     </header>
   );

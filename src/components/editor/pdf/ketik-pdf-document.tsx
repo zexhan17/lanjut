@@ -14,12 +14,12 @@ import {
 import { locationSuffix, withLocation } from "../resume-entry-location";
 import type {
   CertificateItemView,
-  ContactView,
   EducationItemView,
   ExperienceItemView,
   HeaderView,
   ResumePreview,
 } from "../resume-preview";
+import { PdfContactIcon } from "./pdf-contact-icon";
 import {
   type FontScales,
   fontScales,
@@ -59,8 +59,16 @@ const makeStyles = (s: FontScales) =>
       fontSize: 10 * s.name,
       color: PDF_COLORS.muted,
     },
-    contactLine: {
+    contactRowWrap: {
       marginTop: 4,
+      flexDirection: "row",
+      flexWrap: "wrap",
+      gap: 8,
+    },
+    contactRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 3,
       fontFamily: "GeistMono",
       fontSize: 8 * s.body,
       color: PDF_COLORS.muted,
@@ -99,28 +107,6 @@ const makeStyles = (s: FontScales) =>
 
 const baseStyles = makeStyles(NO_SCALE);
 
-function KetikContactLine(props: { contacts: ContactView[] }) {
-  const styles = usePdfStyles(baseStyles);
-  const mono = usePdfFontFamily("GeistMono");
-  // Single-spaced separator, same wrap fix as LuasaContactLine (#145).
-  return (
-    <Text style={[styles.contactLine, { fontFamily: mono }]}>
-      {props.contacts.map((contact, index) => (
-        <Text key={contact.kind}>
-          {index > 0 ? " | " : ""}
-          {contact.href ? (
-            <Link src={contact.href} style={styles.linkMuted}>
-              {contact.value}
-            </Link>
-          ) : (
-            contact.value
-          )}
-        </Text>
-      ))}
-    </Text>
-  );
-}
-
 function KetikHeader(props: { header: HeaderView }) {
   const styles = usePdfStyles(baseStyles);
   const mono = usePdfFontFamily("GeistMono");
@@ -137,7 +123,22 @@ function KetikHeader(props: { header: HeaderView }) {
           </Text>
         ) : null}
         {props.header.contacts.length > 0 ? (
-          <KetikContactLine contacts={props.header.contacts} />
+          <View style={styles.contactRowWrap}>
+            {props.header.contacts.map((contact, index) => (
+              <View key={`${contact.kind}-${index}`} style={styles.contactRow}>
+                {props.header.showIcons ? (
+                  <PdfContactIcon kind={contact.kind} />
+                ) : null}
+                {contact.href ? (
+                  <Link src={contact.href} style={styles.linkMuted}>
+                    {contact.value}
+                  </Link>
+                ) : (
+                  <Text>{contact.value}</Text>
+                )}
+              </View>
+            ))}
+          </View>
         ) : null}
       </View>
     </View>

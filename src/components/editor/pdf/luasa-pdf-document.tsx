@@ -14,12 +14,12 @@ import {
 import { locationSuffix, withLocation } from "../resume-entry-location";
 import type {
   CertificateItemView,
-  ContactView,
   EducationItemView,
   ExperienceItemView,
   HeaderView,
   ResumePreview,
 } from "../resume-preview";
+import { PdfContactIcon } from "./pdf-contact-icon";
 import {
   type FontScales,
   fontScales,
@@ -71,8 +71,16 @@ const makeStyles = (s: FontScales) =>
       fontSize: 10 * s.name,
       color: PDF_COLORS.muted,
     },
-    contactLine: {
-      marginTop: 3,
+    contactRowWrap: {
+      marginTop: 4,
+      flexDirection: "row",
+      flexWrap: "wrap",
+      gap: 8,
+    },
+    contactRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 3,
       fontSize: 9 * s.body,
       color: PDF_COLORS.muted,
     },
@@ -101,29 +109,6 @@ const makeStyles = (s: FontScales) =>
 
 const baseStyles = makeStyles(NO_SCALE);
 
-function LuasaContactLine(props: { contacts: ContactView[] }) {
-  const styles = usePdfStyles(baseStyles);
-  // Single spaces around the bullet are load-bearing: textkit marks any word
-  // not followed by exactly one plain space as a hyphenation point and injects
-  // a stray "-" when the line wraps there (#145).
-  return (
-    <Text style={styles.contactLine}>
-      {props.contacts.map((contact, index) => (
-        <Text key={contact.kind}>
-          {index > 0 ? " • " : ""}
-          {contact.href ? (
-            <Link src={contact.href} style={styles.linkMuted}>
-              {contact.value}
-            </Link>
-          ) : (
-            contact.value
-          )}
-        </Text>
-      ))}
-    </Text>
-  );
-}
-
 function LuasaHeader(props: { header: HeaderView }) {
   const styles = usePdfStyles(baseStyles);
   const serif = usePdfFontFamily("Lora");
@@ -145,7 +130,22 @@ function LuasaHeader(props: { header: HeaderView }) {
           </Text>
         ) : null}
         {props.header.contacts.length > 0 ? (
-          <LuasaContactLine contacts={props.header.contacts} />
+          <View style={styles.contactRowWrap}>
+            {props.header.contacts.map((contact, index) => (
+              <View key={`${contact.kind}-${index}`} style={styles.contactRow}>
+                {props.header.showIcons ? (
+                  <PdfContactIcon kind={contact.kind} />
+                ) : null}
+                {contact.href ? (
+                  <Link src={contact.href} style={styles.linkMuted}>
+                    {contact.value}
+                  </Link>
+                ) : (
+                  <Text>{contact.value}</Text>
+                )}
+              </View>
+            ))}
+          </View>
         ) : null}
       </View>
     </View>

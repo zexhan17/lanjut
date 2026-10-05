@@ -43,11 +43,14 @@ export const TEMPLATE_LINE_HEIGHT: Record<TemplateId, number> = {
   ketik: 1.4,
 };
 
-/** Templates whose headers draw contact icon glyphs; the rest render text-only contacts. */
+/** Templates whose headers draw contact icon glyphs. All templates support contact icons. */
 const TEMPLATE_IDS_WITH_CONTACT_ICONS: TemplateId[] = [
   "awal",
   "ketat",
+  "luasa",
   "tebal",
+  "klasik",
+  "ketik",
 ];
 
 /** Whether a persisted template id renders contact icons. Unknown ids resolve to the default template first, matching renderer fallback. */
