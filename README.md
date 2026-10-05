@@ -29,6 +29,7 @@ Customization applies to how the resume looks. It does not extend to layouts tha
 - Document-level undo and redo across every edit (typing, reorder, layout, settings), from the editor toolbar or Ctrl/Cmd+Z
 - Optional header photo (off by default): add a portrait in Personal Information and every template places it to match its own layout; exports embed it without affecting how parsers read the text
 - Custom sections alongside the fixed types, all sharing the same restricted schema
+- Categorized skills section: organize technical proficiencies by category (e.g. Languages, Frameworks, Tools) with 1- or 2-column layout
 - Drag to reorder sections and toggle any section's visibility (entries within a section sort by date automatically)
 - Document-level presentation controls: font, font size, section spacing, line height, letter spacing, contact-icon visibility, and a one-click style reset
 - Available in English and Indonesian (`next-intl`)

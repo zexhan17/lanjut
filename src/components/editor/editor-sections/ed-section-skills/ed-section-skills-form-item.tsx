@@ -5,27 +5,11 @@ import { SortableItem } from "@/components/shared/sortable-list";
 import { Button } from "@/components/ui/button";
 import { Field, FieldError } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import type { SkillsFormValues } from "../resume-form-adapter";
-
-const PROFICIENCY_LEVELS = [
-  "Beginner",
-  "Intermediate",
-  "Advanced",
-  "Expert",
-] as const;
 
 interface EditorSectionSkillsFormItemProps {
   id: string;
   index: number;
-  showProficiency: boolean;
   control: Control<SkillsFormValues>;
   onRemoveField: (index: number) => void;
 }
@@ -36,19 +20,22 @@ export function EditorSectionSkillsFormItem(
   const t = useTranslations("editor.skills");
 
   return (
-    <SortableItem id={props.id} handleLabel={t("reorder")}>
-      <div className="flex flex-col md:flex-row md:items-center gap-2">
-        <div
-          data-proficiency={props.showProficiency}
-          className="flex items-center gap-2 flex-1"
-        >
+    <SortableItem
+      id={props.id}
+      handleLabel={t("reorder")}
+      align="start"
+      handleClassName="mt-2"
+    >
+      <div className="flex-1 space-y-2">
+        <div className="flex items-center gap-2">
           <Controller
             control={props.control}
-            name={`skills.${props.index}.name`}
+            name={`skills.${props.index}.category`}
             render={({ field, fieldState }) => (
               <Field className="flex-1">
                 <Input
-                  placeholder={t("namePlaceholder")}
+                  placeholder={t("categoryPlaceholder")}
+                  aria-label={t("category")}
                   {...field}
                   id={field.name}
                 />
@@ -61,7 +48,6 @@ export function EditorSectionSkillsFormItem(
             type="button"
             variant="outline"
             size="icon-sm"
-            className="md:hidden"
             onClick={() => props.onRemoveField(props.index)}
           >
             <Trash className="size-3.5 stroke-destructive" />
@@ -69,42 +55,21 @@ export function EditorSectionSkillsFormItem(
           </Button>
         </div>
 
-        {props.showProficiency && (
-          <Controller
-            control={props.control}
-            name={`skills.${props.index}.level`}
-            render={({ field }) => (
-              <Select
-                value={field.value || null}
-                onValueChange={(value) => field.onChange(value)}
-              >
-                <SelectTrigger className="w-[87.888%] md:w-36">
-                  <SelectValue placeholder={t("proficiency")} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    {PROFICIENCY_LEVELS.map((level) => (
-                      <SelectItem key={level} value={level}>
-                        {level}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            )}
-          />
-        )}
-
-        <Button
-          type="button"
-          variant="outline"
-          size="icon-sm"
-          className="max-md:hidden"
-          onClick={() => props.onRemoveField(props.index)}
-        >
-          <Trash className="size-3.5 stroke-destructive" />
-          <span className="sr-only">{t("remove")}</span>
-        </Button>
+        <Controller
+          control={props.control}
+          name={`skills.${props.index}.skills`}
+          render={({ field, fieldState }) => (
+            <Field className="flex-1">
+              <Input
+                placeholder={t("skillsPlaceholder")}
+                aria-label={t("skills")}
+                {...field}
+                id={field.name}
+              />
+              <FieldError errors={[fieldState.error]} />
+            </Field>
+          )}
+        />
       </div>
     </SortableItem>
   );

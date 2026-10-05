@@ -109,12 +109,13 @@ export function resumeToMarkdown(preview: ResumePreview): string {
         for (const item of block.items) {
           const parsed = parseGridItemName(item.name);
           if (parsed.isCategorized) {
+            const detailPart = parsed.details ? ` ${parsed.details}` : "";
             if (item.proficiency) {
               lines.push(
-                `- **${parsed.category}:** ${parsed.details} (${item.proficiency})`,
+                `- **${parsed.category}:**${detailPart} (${item.proficiency})`,
               );
             } else {
-              lines.push(`- **${parsed.category}:** ${parsed.details}`);
+              lines.push(`- **${parsed.category}:**${detailPart}`);
             }
           } else {
             if (item.proficiency) {

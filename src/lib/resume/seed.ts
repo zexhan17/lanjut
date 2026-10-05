@@ -433,65 +433,43 @@ export const SEED_RESUME: Resume = {
       id: "seed-skills",
       type: "skills",
       title: "Skills",
-      columns: 2,
-      showProficiency: true,
+      columns: 1,
+      showProficiency: false,
       entries: [
         {
           id: "seed-skills-1",
-          fields: { name: plain("TypeScript"), level: plain("Expert") },
+          fields: {
+            name: plain(
+              "Languages: TypeScript, JavaScript (ES2023), Python, SQL",
+            ),
+            level: plain(""),
+          },
         },
         {
           id: "seed-skills-2",
           fields: {
-            name: plain("JavaScript (ES2023)"),
-            level: plain("Expert"),
+            name: plain(
+              "Frameworks & Libraries: React, Next.js, Node.js, Express, Tailwind CSS",
+            ),
+            level: plain(""),
           },
         },
         {
           id: "seed-skills-3",
-          fields: { name: plain("React & Next.js"), level: plain("Expert") },
+          fields: {
+            name: plain(
+              "Tools & Platforms: Git, Docker, CI/CD, AWS, Playwright, Vitest",
+            ),
+            level: plain(""),
+          },
         },
         {
           id: "seed-skills-4",
-          fields: { name: plain("Node.js"), level: plain("Advanced") },
-        },
-        {
-          id: "seed-skills-5",
           fields: {
-            name: plain("GraphQL & REST APIs"),
-            level: plain("Advanced"),
-          },
-        },
-        {
-          id: "seed-skills-6",
-          fields: { name: plain("Tailwind CSS"), level: plain("Advanced") },
-        },
-        {
-          id: "seed-skills-7",
-          fields: {
-            name: plain("Testing (Playwright, Vitest)"),
-            level: plain("Advanced"),
-          },
-        },
-        {
-          id: "seed-skills-8",
-          fields: {
-            name: plain("State (Zustand, React Query)"),
-            level: plain("Advanced"),
-          },
-        },
-        {
-          id: "seed-skills-9",
-          fields: {
-            name: plain("Web Accessibility (WCAG)"),
-            level: plain("Advanced"),
-          },
-        },
-        {
-          id: "seed-skills-10",
-          fields: {
-            name: plain("CI/CD & Docker"),
-            level: plain("Intermediate"),
+            name: plain(
+              "Architecture & Practices: REST APIs, GraphQL, Zustand, Web Accessibility (WCAG)",
+            ),
+            level: plain(""),
           },
         },
       ],

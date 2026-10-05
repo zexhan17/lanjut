@@ -43,8 +43,12 @@ export function PdfGrid(props: {
           <View key={item.id} style={[styles.gridItem, { width }]}>
             {parsed.isCategorized ? (
               <Text style={styles.gridText}>
-                <Text style={styles.gridName}>{parsed.category}: </Text>
-                <Text style={styles.gridDetails}>{parsed.details}</Text>
+                <Text style={styles.gridName}>
+                  {parsed.category}:{parsed.details ? " " : ""}
+                </Text>
+                {parsed.details ? (
+                  <Text style={styles.gridDetails}>{parsed.details}</Text>
+                ) : null}
               </Text>
             ) : (
               <Text style={styles.gridName}>{item.name}</Text>

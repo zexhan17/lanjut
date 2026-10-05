@@ -375,12 +375,17 @@ export const SECTION_REGISTRY: Record<SectionType, SectionSchema> = {
     defaultTitle: "Skills",
     singleton: false,
     fields: [
-      { key: "name", label: "Skill", kind: "plain", placeholder: "TypeScript" },
+      {
+        key: "name",
+        label: "Category & Skills",
+        kind: "plain",
+        placeholder: "Languages: TypeScript, JavaScript",
+      },
       {
         key: "level",
         label: "Proficiency",
         kind: "plain",
-        placeholder: "Advanced",
+        placeholder: "",
       },
     ],
   },

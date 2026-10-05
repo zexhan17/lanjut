@@ -22,17 +22,14 @@ import {
 } from "../resume-form-adapter";
 import { EditorSectionSkillsFormItem } from "./ed-section-skills-form-item";
 import { SkillsColumnsToggle } from "./skills-columns-toggle";
-import { SkillsProficiencyToggle } from "./skills-proficiency-toggle";
 
 function emptySkill(): SkillItemValues {
-  return { name: "", level: "" };
+  return { category: "", skills: "" };
 }
 
 export function EditorSectionSkillsForm() {
   const open = useResumeStore((state) => state.open);
   const updateOpen = useResumeStore((state) => state.updateOpen);
-  const showProficiency =
-    open?.sections.find((s) => s.type === "skills")?.showProficiency ?? true;
   const t = useTranslations("editor.skills");
   const tc = useTranslations("editor.common");
 
@@ -82,7 +79,6 @@ export function EditorSectionSkillsForm() {
         ) : (
           <>
             <SkillsColumnsToggle />
-            <SkillsProficiencyToggle />
             <SortableList
               items={fields.map((field) => field.id)}
               onReorder={handleReorder}
@@ -94,7 +90,6 @@ export function EditorSectionSkillsForm() {
                     id={field.id}
                     control={form.control}
                     index={index}
-                    showProficiency={showProficiency}
                     onRemoveField={remove}
                   />
                 ))}

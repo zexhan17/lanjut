@@ -184,9 +184,14 @@ function gridParagraphs(
 
     if (parsed.isCategorized) {
       runs.push(
-        new TextRun({ text: `${parsed.category}: `, bold: true }),
-        new TextRun({ text: parsed.details, color: MUTED }),
+        new TextRun({
+          text: `${parsed.category}:${parsed.details ? " " : ""}`,
+          bold: true,
+        }),
       );
+      if (parsed.details) {
+        runs.push(new TextRun({ text: parsed.details, color: MUTED }));
+      }
     } else {
       runs.push(new TextRun({ text: item.name, bold: true }));
     }

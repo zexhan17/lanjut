@@ -101,8 +101,8 @@ export interface EducationFormValues {
 }
 
 export interface SkillItemValues {
-  name: string;
-  level: string;
+  category: string;
+  skills: string;
 }
 
 export interface SkillsFormValues {
@@ -439,10 +439,24 @@ export function skillsEntries(resume: Resume): Entry[] {
 
 export function toSkillsValues(resume: Resume): SkillsFormValues {
   return {
-    skills: skillsEntries(resume).map((entry) => ({
-      name: plainValue(entry.fields.name),
-      level: plainValue(entry.fields.level),
-    })),
+    skills: skillsEntries(resume).map((entry) => {
+      const rawName = plainValue(entry.fields.name);
+      const colonIndex = rawName.indexOf(":");
+      if (
+        colonIndex > 0 &&
+        !rawName.startsWith("http://") &&
+        !rawName.startsWith("https://")
+      ) {
+        return {
+          category: rawName.slice(0, colonIndex).trim(),
+          skills: rawName.slice(colonIndex + 1).trim(),
+        };
+      }
+      return {
+        category: "",
+        skills: rawName,
+      };
+    }),
   };
 }
 
@@ -452,10 +466,23 @@ export function applySkillsValues(
 ): void {
   const section = sectionOfType(draft, "skills");
   if (!section) return;
-  section.entries = values.skills.map((item, index) => ({
-    id: entryId(section, index),
-    fields: { name: plain(item.name), level: plain(item.level) },
-  }));
+  section.entries = values.skills.map((item, index) => {
+    const category = item.category?.trim() ?? "";
+    const skills = item.skills?.trim() ?? "";
+    const name = category
+      ? skills
+        ? `${category}: ${skills}`
+        : `${category}:`
+      : skills;
+
+    return {
+      id: entryId(section, index),
+      fields: {
+        name: plain(name),
+        level: plain(""),
+      },
+    };
+  });
 }
 
 // --- Certifications (repeating: name, issuer, url) --------------------------

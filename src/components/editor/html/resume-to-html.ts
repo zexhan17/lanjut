@@ -166,8 +166,11 @@ function renderGrid(
   const itemsHtml = items
     .map((item) => {
       const parsed = parseGridItemName(item.name);
+      const detailsHtml = parsed.details
+        ? ` <span class="grid-details">${escapeHtml(parsed.details)}</span>`
+        : "";
       const nameHtml = parsed.isCategorized
-        ? `<span class="grid-name"><strong>${escapeHtml(parsed.category)}:</strong> <span class="grid-details">${escapeHtml(parsed.details)}</span></span>`
+        ? `<span class="grid-name"><strong>${escapeHtml(parsed.category)}:</strong>${detailsHtml}</span>`
         : `<span class="grid-name">${escapeHtml(item.name)}</span>`;
       const profHtml = item.proficiency
         ? `<span class="grid-proficiency">${escapeHtml(item.proficiency)}</span>`

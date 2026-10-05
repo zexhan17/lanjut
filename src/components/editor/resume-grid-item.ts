@@ -16,8 +16,7 @@ export function parseGridItemName(name: string): ParsedGridItemName {
   if (
     colonIndex > 0 &&
     !name.startsWith("http://") &&
-    !name.startsWith("https://") &&
-    colonIndex < name.length - 1
+    !name.startsWith("https://")
   ) {
     return {
       isCategorized: true,

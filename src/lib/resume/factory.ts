@@ -56,11 +56,10 @@ export function createEmptySection(type: SectionType): Section {
     entries: [],
     hidden: false,
   };
-  // The Skills grid is column-toggleable; new sections start two-column and
-  // show per-skill proficiency until the user hides it.
+  // The Skills grid is column-toggleable; new sections start one-column for categorized skills.
   if (type === "skills") {
-    section.columns = 2;
-    section.showProficiency = true;
+    section.columns = 1;
+    section.showProficiency = false;
   }
   // Languages share the Skills grid controls: column-toggleable and proficiency
   // shown until the user hides it. New sections start two-column.

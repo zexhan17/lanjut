@@ -9,11 +9,13 @@ export function ResumeSkillItem(props: SkillItemView) {
       <li className="flex items-baseline justify-between gap-4 resume-body-xs leading-relaxed">
         <div>
           <span className="font-semibold text-foreground">
-            {parsed.category}:{" "}
+            {parsed.category}:{parsed.details ? " " : ""}
           </span>
-          <span className="font-normal text-muted-foreground">
-            {parsed.details}
-          </span>
+          {parsed.details ? (
+            <span className="font-normal text-muted-foreground">
+              {parsed.details}
+            </span>
+          ) : null}
         </div>
         {props.proficiency && (
           <span className="shrink-0 text-muted-foreground">
