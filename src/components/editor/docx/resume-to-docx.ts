@@ -10,6 +10,7 @@ import {
 import type { InlineRun, RichBlock } from "@/lib/resume/rich-content";
 import { buildResumeBlocks } from "../resume-blocks";
 import { locationSuffix, withLocation } from "../resume-entry-location";
+import { parseGridItemName } from "../resume-grid-item";
 import type { ContactView, HeaderView, ResumePreview } from "../resume-preview";
 
 const MUTED = "525252";
@@ -177,18 +178,28 @@ function contactRuns(contacts: ContactView[]): (TextRun | ExternalHyperlink)[] {
 function gridParagraphs(
   items: { name: string; proficiency: string }[],
 ): Paragraph[] {
-  return items.map(
-    (item) =>
-      new Paragraph({
-        spacing: { after: 20 },
-        children: [
-          new TextRun({ text: item.name, bold: true }),
-          ...(item.proficiency
-            ? [new TextRun({ text: ` - ${item.proficiency}`, color: MUTED })]
-            : []),
-        ],
-      }),
-  );
+  return items.map((item) => {
+    const parsed = parseGridItemName(item.name);
+    const runs: TextRun[] = [];
+
+    if (parsed.isCategorized) {
+      runs.push(
+        new TextRun({ text: `${parsed.category}: `, bold: true }),
+        new TextRun({ text: parsed.details, color: MUTED }),
+      );
+    } else {
+      runs.push(new TextRun({ text: item.name, bold: true }));
+    }
+
+    if (item.proficiency) {
+      runs.push(new TextRun({ text: ` - ${item.proficiency}`, color: MUTED }));
+    }
+
+    return new Paragraph({
+      spacing: { after: 30 },
+      children: runs,
+    });
+  });
 }
 
 /**

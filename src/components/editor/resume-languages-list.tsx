@@ -12,7 +12,7 @@ export function ResumeLanguagesList(props: ResumeLanguagesListProps) {
   return (
     <ul
       className={cn(
-        "grid gap-x-8 gap-y-1",
+        "grid gap-x-8 gap-y-2",
         props.columns === 1 ? "grid-cols-1" : "grid-cols-2",
       )}
     >

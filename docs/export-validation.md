@@ -23,6 +23,8 @@ XML, and the serializer outputs for `.txt` and `.md`. It then asserts:
   extracted text of every template PDF and the `.docx` byte-identical to the
   photo-free output. The photo is presentation-only; if it ever shifts, drops, or
   adds a character of extracted text, the gate fails.
+- **Categorized skills mapping**: categorized skill and language items (e.g. `Backend & Systems: NestJS 11, Node.js`)
+  retain both category and details in the extracted text across every export format.
 
 This is the pdftotext-equivalent text-extraction test required by `AGENTS.md`. **Run it
 after any change to an export path** (`pdf/`, `docx/`, `resume-to-text.ts`,

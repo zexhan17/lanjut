@@ -1,5 +1,6 @@
 import { richBlocksToMarkdown } from "@/lib/resume/rich-content";
 import { buildResumeBlocks } from "./resume-blocks";
+import { parseGridItemName } from "./resume-grid-item";
 import type { ContactKind, ContactView, ResumePreview } from "./resume-preview";
 
 const CONTACT_ICONS: Record<ContactKind, string> = {
@@ -106,10 +107,21 @@ export function resumeToMarkdown(preview: ResumePreview): string {
       case "skills":
       case "languages": {
         for (const item of block.items) {
-          if (item.proficiency) {
-            lines.push(`- **${item.name}**: ${item.proficiency}`);
+          const parsed = parseGridItemName(item.name);
+          if (parsed.isCategorized) {
+            if (item.proficiency) {
+              lines.push(
+                `- **${parsed.category}:** ${parsed.details} (${item.proficiency})`,
+              );
+            } else {
+              lines.push(`- **${parsed.category}:** ${parsed.details}`);
+            }
           } else {
-            lines.push(`- **${item.name}**`);
+            if (item.proficiency) {
+              lines.push(`- **${item.name}**: ${item.proficiency}`);
+            } else {
+              lines.push(`- **${item.name}**`);
+            }
           }
         }
         lines.push("");

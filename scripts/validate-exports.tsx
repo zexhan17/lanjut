@@ -349,6 +349,51 @@ async function main(): Promise<void> {
     errors.push(...ligatureErrors);
   }
 
+  // Categorized skills (e.g. "Backend & Systems: NestJS 11, Node.js") must carry both
+  // category and details across all export formats without dropping content.
+  const catResume = structuredClone(SEED_RESUME);
+  const skillsSec = catResume.sections.find((s) => s.type === "skills");
+  if (skillsSec) {
+    skillsSec.entries.push({
+      id: "cat-skill-test",
+      fields: {
+        name: { kind: "plain", value: "Backend & Systems: NestJS 11, Node.js" },
+        level: { kind: "plain", value: "" },
+      },
+    });
+  }
+  const catPreview = resumeToPreview(catResume);
+  const catOutputs: [string, string][] = [
+    ["Categorized TXT", resumeToText(catPreview)],
+    ["Categorized MD", resumeToMarkdown(catPreview)],
+    [
+      "Categorized DOCX",
+      await extractDocxText(await Packer.toBuffer(buildAwalDocx(catPreview))),
+    ],
+  ];
+  for (const [template, PdfDocument] of Object.entries(
+    TEMPLATE_PDF_DOCUMENTS,
+  )) {
+    catOutputs.push([
+      `Categorized PDF(${template})`,
+      await extractPdfText(
+        await renderToBuffer(<PdfDocument preview={catPreview} />),
+      ),
+    ]);
+  }
+  for (const [label, text] of catOutputs) {
+    const haystack = text.toUpperCase();
+    if (!haystack.includes("BACKEND & SYSTEMS")) {
+      errors.push(
+        `${label}: category "Backend & Systems" missing from extracted text`,
+      );
+    }
+    if (!haystack.includes("NESTJS 11")) {
+      errors.push(`${label}: details "NestJS 11" missing from extracted text`);
+    }
+  }
+  console.log("Categorized skills: all fields present in every export format");
+
   if (errors.length > 0) {
     for (const error of errors) console.error(`  ✗ ${error}`);
     console.error(`\n${errors.length} validation failure(s).`);
