@@ -32,8 +32,8 @@ Customization applies to how the resume looks. It does not extend to layouts tha
 - Drag to reorder sections and toggle any section's visibility (entries within a section sort by date automatically)
 - Document-level presentation controls: font, font size, section spacing, line height, letter spacing, contact-icon visibility, and a one-click style reset
 - Available in English and Indonesian (`next-intl`)
-- Export to PDF (linear reading order preserved), .docx, plain text, and Markdown (.md)
-- Headless export API route: render PDF, DOCX, Markdown, or plain text by posting resume JSON to `/api/export`
+- Export to PDF (linear reading order preserved), .docx, self-contained HTML (fonts, icons, and CSS embedded), plain text, and Markdown (.md)
+- Headless export API route: render PDF, DOCX, HTML, Markdown, or plain text by posting resume JSON to `/api/export`
 - Copy, download, and re-import a résumé as JSON or YAML
 - Guided tour of the editor and library for first-time users
 - Send bug reports and feature requests in-app, no GitHub account required
@@ -92,7 +92,7 @@ Open `http://localhost:3000`.
 | `pnpm dev` | Start the dev server |
 | `pnpm lint` / `pnpm format` | Check / write with Biome |
 | `pnpm typecheck` | Generate Next types and run `tsc --noEmit` |
-| `pnpm validate:exports` | Regenerate PDF/DOCX/TXT/MD from the seed résumé and verify extraction order and field mapping |
+| `pnpm validate:exports` | Regenerate PDF/HTML/DOCX/TXT/MD from the seed résumé and verify extraction order and field mapping |
 | `pnpm preview` | Build with open-next and preview the Cloudflare worker locally |
 | `pnpm ship` | Build and deploy to Cloudflare |
 | `pnpm commit` | Commit via the commitizen prompt |
@@ -104,6 +104,7 @@ Resume content is stored in IndexedDB in the browser. No resume content is sent 
 ## Export Formats
 
 - **PDF**: structured text export, not a visual snapshot. Reading order is preserved for ATS text extraction.
+- **HTML**: self-contained single-file document with offline base64 fonts, vector SVG icons, responsive card view, and print-to-PDF styles.
 - **DOCX / plain text**: direct ATS-submission-safe formats, recommended over PDF for systems with strict parsing requirements.
 
 Changes to the export path are gated by `pnpm validate:exports`, which regenerates every format from the seed résumé and verifies, via real text extraction, that linear reading order is preserved and every field maps through.

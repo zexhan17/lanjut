@@ -52,6 +52,16 @@ export async function downloadResume(
     return;
   }
 
+  if (format === "html") {
+    const { downloadResumeHtml } = await import("./html/download-resume-html");
+    await downloadResumeHtml(
+      preview,
+      fileName,
+      resolveTemplateId(resume.templateId),
+    );
+    return;
+  }
+
   const { downloadResumeText } = await import("./download-resume-text");
   downloadResumeText(preview, fileName);
 }

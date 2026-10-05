@@ -1,6 +1,6 @@
 # Export validation
 
-The résumé exports (PDF, `.docx`, `.txt`, `.md`) must stay **ATS-parseable**: real, selectable
+The résumé exports (PDF, `.docx`, `.txt`, `.md`, `.html`) must stay **ATS-parseable**: real, selectable
 text in linear reading order, with every field mappable by a parser. Two layers of
 verification back this up.
 
@@ -12,7 +12,7 @@ pnpm validate:exports
 
 `scripts/validate-exports.tsx` regenerates all exports from the seed résumé and
 extracts their text with real parsers: `unpdf` for the PDF, `jszip` for the `.docx`
-XML, and the serializer outputs for `.txt` and `.md`. It then asserts:
+XML, and the serializer outputs for `.txt`, `.md`, and `.html`. It then asserts:
 
 - **Reading order**: `Summary → Experience → Education → Certificates → Skills →
   Languages` appears in that order in every format.
@@ -20,14 +20,14 @@ XML, and the serializer outputs for `.txt` and `.md`. It then asserts:
   school location, education, certificate, a representative skill, and a language are
   all present in the extracted text.
 - **Photo invariance**: rendering with the opt-in header photo must leave the
-  extracted text of every template PDF and the `.docx` byte-identical to the
+  extracted text of every template PDF, the `.docx`, and HTML identical to the
   photo-free output. The photo is presentation-only; if it ever shifts, drops, or
   adds a character of extracted text, the gate fails.
 - **Categorized skills mapping**: categorized skill and language items (e.g. `Backend & Systems: NestJS 11, Node.js`)
   retain both category and details in the extracted text across every export format.
 
 This is the pdftotext-equivalent text-extraction test required by `AGENTS.md`. **Run it
-after any change to an export path** (`pdf/`, `docx/`, `resume-to-text.ts`,
+after any change to an export path** (`pdf/`, `docx/`, `html/`, `resume-to-text.ts`,
 `resume-to-markdown.ts`, `buildResumeBlocks`, or the rich-content model). It exits non-zero on failure.
 
 Because all exporters consume the same `buildResumeBlocks` sequence as the

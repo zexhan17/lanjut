@@ -121,6 +121,21 @@ export async function exportResumeServer(
       };
     }
 
+    if (format === "html") {
+      const { coverLetterToHtml } = await import(
+        "@/components/editor/html/cover-letter-to-html"
+      );
+      const { nodeFontLoader } = await import("./node-font-loader");
+      const html = await coverLetterToHtml(preview, templateId, {
+        fontLoader: nodeFontLoader,
+      });
+      return {
+        data: html,
+        contentType: "text/html; charset=utf-8",
+        fileName: `${baseName}.html`,
+      };
+    }
+
     return {
       data: coverLetterToText(preview),
       contentType: "text/plain; charset=utf-8",
@@ -177,6 +192,21 @@ export async function exportResumeServer(
       data: resumeToMarkdown(preview),
       contentType: "text/markdown; charset=utf-8",
       fileName: `${baseName}.md`,
+    };
+  }
+
+  if (format === "html") {
+    const { resumeToHtml } = await import(
+      "@/components/editor/html/resume-to-html"
+    );
+    const { nodeFontLoader } = await import("./node-font-loader");
+    const html = await resumeToHtml(preview, templateId, {
+      fontLoader: nodeFontLoader,
+    });
+    return {
+      data: html,
+      contentType: "text/html; charset=utf-8",
+      fileName: `${baseName}.html`,
     };
   }
 

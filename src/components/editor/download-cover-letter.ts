@@ -53,6 +53,18 @@ export async function downloadCoverLetter(
     return;
   }
 
+  if (format === "html") {
+    const { downloadCoverLetterHtml } = await import(
+      "./html/download-cover-letter-html"
+    );
+    await downloadCoverLetterHtml(
+      preview,
+      fileName,
+      resolveTemplateId(resume.templateId),
+    );
+    return;
+  }
+
   const { downloadCoverLetterText } = await import(
     "./cover-letter/download-cover-letter-text"
   );

@@ -22,12 +22,16 @@ import { coverLetterToMarkdown } from "@/components/editor/cover-letter/cover-le
 import { coverLetterToText } from "@/components/editor/cover-letter/cover-letter-to-text";
 import { buildCoverLetterDocx } from "@/components/editor/docx/cover-letter-to-docx";
 import { buildAwalDocx } from "@/components/editor/docx/resume-to-docx";
+import { coverLetterToHtml } from "@/components/editor/html/cover-letter-to-html";
+import { resumeToHtml } from "@/components/editor/html/resume-to-html";
 import { COVER_LETTER_PDF_DOCUMENTS } from "@/components/editor/pdf/cover-letter/template-cover-letter-pdf";
 import { TEMPLATE_PDF_DOCUMENTS } from "@/components/editor/pdf/template-pdf-document";
 import { resumeToMarkdown } from "@/components/editor/resume-to-markdown";
 import { resumeToPreview } from "@/components/editor/resume-to-preview";
 import { resumeToText } from "@/components/editor/resume-to-text";
 import { SEED_RESUME } from "@/lib/resume/seed";
+import { nodeFontLoader } from "@/lib/server/node-font-loader";
+import { TEMPLATES } from "@/lib/templates";
 
 const root = process.cwd();
 
@@ -226,6 +230,23 @@ async function extractDocxText(buffer: Buffer): Promise<string> {
     .replace(/&gt;/g, ">");
 }
 
+function extractHtmlText(html: string): string {
+  return html
+    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, " ")
+    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, " ")
+    .replace(/<svg[^>]*>[\s\S]*?<\/svg>/gi, " ")
+    .replace(/<img[^>]*>/gi, "")
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<\/(p|div|li|h1|h2|h3|header|main)>/gi, "\n")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&nbsp;/g, " ");
+}
+
 /** A tiny valid JPEG, enough for react-pdf and docx to embed. */
 const TEST_PHOTO = `data:image/jpeg;base64,${[
   "/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEB",
@@ -261,6 +282,13 @@ async function main(): Promise<void> {
     ]);
   }
 
+  for (const template of TEMPLATES) {
+    const html = await resumeToHtml(preview, template.id, {
+      fontLoader: nodeFontLoader,
+    });
+    outputs.push([`HTML(${template.id})`, extractHtmlText(html)]);
+  }
+
   const errors: string[] = [];
   for (const [label, text] of outputs) {
     console.log(`${label}: extracted ${text.length} chars`);
@@ -288,6 +316,16 @@ async function main(): Promise<void> {
       await extractPdfText(
         await renderToBuffer(<PdfDocument preview={clPreview} />),
       ),
+    ]);
+  }
+
+  for (const template of TEMPLATES) {
+    const clHtml = await coverLetterToHtml(clPreview, template.id, {
+      fontLoader: nodeFontLoader,
+    });
+    clOutputs.push([
+      `CoverLetter HTML(${template.id})`,
+      extractHtmlText(clHtml),
     ]);
   }
 
@@ -339,6 +377,21 @@ async function main(): Promise<void> {
       );
     }
   }
+  for (const template of TEMPLATES) {
+    const plainText = extractHtmlText(
+      await resumeToHtml(preview, template.id, { fontLoader: nodeFontLoader }),
+    );
+    const withPhoto = extractHtmlText(
+      await resumeToHtml(photoPreview, template.id, {
+        fontLoader: nodeFontLoader,
+      }),
+    );
+    if (plainText !== withPhoto) {
+      errors.push(
+        `HTML(${template.id}): adding a photo changed the extracted text`,
+      );
+    }
+  }
   console.log("Photo invariance: extracted text identical with a photo");
 
   for (const family of ["Lora", "Merriweather"]) {
@@ -381,6 +434,16 @@ async function main(): Promise<void> {
       ),
     ]);
   }
+  for (const template of TEMPLATES) {
+    catOutputs.push([
+      `Categorized HTML(${template.id})`,
+      extractHtmlText(
+        await resumeToHtml(catPreview, template.id, {
+          fontLoader: nodeFontLoader,
+        }),
+      ),
+    ]);
+  }
   for (const [label, text] of catOutputs) {
     const haystack = text.toUpperCase();
     if (!haystack.includes("BACKEND & SYSTEMS")) {
@@ -401,7 +464,7 @@ async function main(): Promise<void> {
   }
 
   console.log(
-    "\n✓ All exports preserve reading order and carry every field (every template PDF, DOCX, TXT).",
+    "\n✓ All exports preserve reading order and carry every field (every template PDF, HTML, DOCX, TXT, MD).",
   );
 }
 

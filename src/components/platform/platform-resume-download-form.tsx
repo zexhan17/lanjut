@@ -75,7 +75,11 @@ export function PlatformResumeDownloadForm(
               }}
             >
               {EXPORT_FORMATS.map((value) => (
-                <ToggleGroupItem key={value} value={value} className="flex-1">
+                <ToggleGroupItem
+                  key={value}
+                  value={value}
+                  className="flex-1 px-1 text-xs sm:px-2"
+                >
                   {value.toUpperCase()}
                 </ToggleGroupItem>
               ))}
