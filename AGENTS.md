@@ -12,9 +12,9 @@ An ATS Builder. Free, Open-Source, local-first resume builder. Customizable pres
 
 ## Tech Stack
 
-- Next.js (App Router)
-- open-next on Cloudflare (hosting only; the sole server surface is the `/api/feedback` route, which relays bug reports and feature requests and never receives resume content)
-- next-intl (internationalization; `[locale]` routing for English and Indonesian, `messages/*.json`, proxy)
+- Next.js (App Router, static export `output: "export"`)
+- GitHub Pages (hosting; 100% client-side, zero server runtime or server surfaces)
+- next-intl (internationalization; `[locale]` static routing for English and Indonesian, `messages/*.json`)
 - shadcn (base-ui variant)
 - Tailwind CSS
 - [TipTap](https://tiptap.dev/docs) (rich text editing, restricted extension set)

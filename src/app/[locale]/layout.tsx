@@ -1,46 +1,10 @@
-import type { Metadata, Viewport } from "next";
-import {
-  Fraunces,
-  Geist,
-  Geist_Mono,
-  Inter,
-  Plus_Jakarta_Sans,
-} from "next/font/google";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import "../globals.css";
 import { Providers } from "@/components/shared/providers";
 import { type Locale, routing } from "@/i18n/routing";
 import { SITE } from "@/lib/site";
-import { cn } from "@/lib/utils";
-
-const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-// Brand wordmark face ("Lanjut" next to the mark), scoped via `font-brand`.
-const jakarta = Plus_Jakarta_Sans({
-  variable: "--font-brand",
-  subsets: ["latin"],
-  weight: ["700", "800"],
-});
-
-// Editorial display serif, scoped to marketing headings via `font-display`.
-// Roman only; the résumé document keeps its own font system.
-const fraunces = Fraunces({
-  variable: "--font-display",
-  subsets: ["latin"],
-  style: "normal",
-});
 
 const OG_LOCALE: Record<Locale, string> = {
   en: "en_US",
@@ -55,6 +19,7 @@ export async function generateMetadata(props: {
   params: Promise<{ locale: Locale }>;
 }): Promise<Metadata> {
   const { locale } = await props.params;
+  setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "meta" });
 
   return {
@@ -106,11 +71,7 @@ export async function generateMetadata(props: {
   };
 }
 
-export const viewport: Viewport = {
-  themeColor: "#1c6b4f",
-};
-
-export default async function RootLayout(props: {
+export default async function LocaleLayout(props: {
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
 }) {
@@ -123,25 +84,8 @@ export default async function RootLayout(props: {
   setRequestLocale(locale);
 
   return (
-    <html
-      lang={locale}
-      suppressHydrationWarning
-      className={cn(
-        "h-full",
-        "antialiased",
-        geistSans.variable,
-        geistMono.variable,
-        fraunces.variable,
-        jakarta.variable,
-        "font-sans",
-        inter.variable,
-      )}
-    >
-      <body>
-        <NextIntlClientProvider>
-          <Providers>{props.children}</Providers>
-        </NextIntlClientProvider>
-      </body>
-    </html>
+    <NextIntlClientProvider>
+      <Providers>{props.children}</Providers>
+    </NextIntlClientProvider>
   );
 }

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import type { PropsWithChildren } from "react";
-import { PlatformBugReportDialog } from "@/components/platform/platform-bug-report-dialog";
-import { PlatformFeatureRequestDialog } from "@/components/platform/platform-feature-request-dialog";
+import { setRequestLocale } from "next-intl/server";
+import type { ReactNode } from "react";
 import { PlatformNavbar } from "@/components/platform/platform-navbar";
 import { PlatformSidebar } from "@/components/platform/platform-sidebar";
 import { PlatformSidebarProvider } from "@/components/platform/platform-sidebar-provider";
@@ -14,7 +13,13 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export default function PlatformLayout({ children }: PropsWithChildren) {
+export default async function PlatformLayout(props: {
+  children: ReactNode;
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await props.params;
+  setRequestLocale(locale);
+
   return (
     <TourProvider>
       <PlatformSidebarProvider>
@@ -27,11 +32,8 @@ export default function PlatformLayout({ children }: PropsWithChildren) {
             pushes the layout past the viewport. */}
         <SidebarInset className="min-w-0">
           <PlatformNavbar />
-          {children}
+          {props.children}
         </SidebarInset>
-
-        <PlatformBugReportDialog />
-        <PlatformFeatureRequestDialog />
       </PlatformSidebarProvider>
     </TourProvider>
   );

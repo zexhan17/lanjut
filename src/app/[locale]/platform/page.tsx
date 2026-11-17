@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Suspense } from "react";
 import { PlatformEmptyState } from "@/components/platform/platform-empty-state";
 import { PlatformLibraryTour } from "@/components/platform/platform-library-tour";
@@ -11,6 +11,7 @@ export async function generateMetadata(props: {
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await props.params;
+  setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "platform.sidebar" });
   return { title: t("dashboard") };
 }
@@ -19,6 +20,7 @@ export default async function PlatformPage(props: {
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await props.params;
+  setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "platform.sidebar" });
 
   return (

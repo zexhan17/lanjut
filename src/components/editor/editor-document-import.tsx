@@ -72,7 +72,7 @@ export function EditorDocumentImport() {
       language: locale as ResumeLanguage,
     });
     reset();
-    router.push(`/platform/editor/${resume.id}`);
+    router.push(`/platform/editor?id=${resume.id}`);
   };
 
   return (

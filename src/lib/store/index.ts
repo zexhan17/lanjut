@@ -4,7 +4,6 @@ export {
   type EditorTab,
   useEditorChromeStore,
 } from "./editor-chrome-store";
-export { useIssueReportStore } from "./issue-report-store";
 export {
   type LandingDraft,
   useLandingDraftStore,

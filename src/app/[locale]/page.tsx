@@ -15,6 +15,7 @@ export async function generateMetadata(props: {
   params: Promise<{ locale: Locale }>;
 }): Promise<Metadata> {
   const { locale } = await props.params;
+  setRequestLocale(locale);
 
   return {
     alternates: {

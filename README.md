@@ -33,10 +33,8 @@ Customization applies to how the resume looks. It does not extend to layouts tha
 - Document-level presentation controls: font, font size, section spacing, line height, letter spacing, contact-icon visibility, and a one-click style reset
 - Available in English and Indonesian (`next-intl`)
 - Export to PDF (linear reading order preserved), .docx, self-contained HTML (fonts, icons, and CSS embedded), plain text, and Markdown (.md)
-- Headless export API route: render PDF, DOCX, HTML, Markdown, or plain text by posting resume JSON to `/api/export`
 - Copy, download, and re-import a résumé as JSON or YAML
 - Guided tour of the editor and library for first-time users
-- Send bug reports and feature requests in-app, no GitHub account required
 - Local persistence via IndexedDB, no data leaves the browser
 - Fully local: works offline after initial load
 
@@ -57,8 +55,8 @@ Every template renders the same linear block sequence, so switching templates ne
 
 | Purpose | Library |
 |---|---|
-| Framework | Next.js (App Router) |
-| Hosting | open-next on Cloudflare |
+| Framework | Next.js (App Router, Static Export) |
+| Hosting | GitHub Pages |
 | Internationalization | next-intl (English, Indonesian) |
 | UI components | shadcn (base-ui) |
 | Styling | Tailwind CSS |
@@ -90,11 +88,10 @@ Open `http://localhost:3000`.
 | Script | What it does |
 |---|---|
 | `pnpm dev` | Start the dev server |
+| `pnpm build` | Build the static export to `out/` |
 | `pnpm lint` / `pnpm format` | Check / write with Biome |
 | `pnpm typecheck` | Generate Next types and run `tsc --noEmit` |
 | `pnpm validate:exports` | Regenerate PDF/HTML/DOCX/TXT/MD from the seed résumé and verify extraction order and field mapping |
-| `pnpm preview` | Build with open-next and preview the Cloudflare worker locally |
-| `pnpm ship` | Build and deploy to Cloudflare |
 | `pnpm commit` | Commit via the commitizen prompt |
 
 ## Data and Privacy

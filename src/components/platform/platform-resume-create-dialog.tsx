@@ -84,7 +84,7 @@ export function PlatformResumeCreateDialog(
     form.reset({ title: "", source: "sample" });
     setImported(null);
     props.onOpenChange(false);
-    router.push(`/platform/editor/${resume.id}`);
+    router.push(`/platform/editor?id=${resume.id}`);
   });
 
   const importIncomplete = source === "import" && (!imported || parsing);

@@ -1,7 +1,7 @@
 "use client";
 
 import { FileQuestion } from "lucide-react";
-import { useParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { nearestResumeById } from "@/lib/resume";
@@ -14,9 +14,10 @@ import { useResumeStore } from "@/lib/store";
  * fall back to the plain message.
  */
 export function EditorResumeNotFound() {
-  const params = useParams<{ id?: string }>();
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
   const index = useResumeStore((state) => state.index);
-  const suggestion = nearestResumeById(index, params?.id ?? "");
+  const suggestion = nearestResumeById(index, id ?? "");
   const t = useTranslations("editor.chrome");
 
   return (
@@ -31,7 +32,7 @@ export function EditorResumeNotFound() {
         <p>
           {t("didYouMean")}{" "}
           <Link
-            href={`/platform/editor/${suggestion.id}`}
+            href={`/platform/editor?id=${suggestion.id}`}
             className="font-medium text-primary underline-offset-4 hover:underline"
           >
             {suggestion.title}

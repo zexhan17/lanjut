@@ -26,7 +26,7 @@ export function PlatformResumeGridItem({
   const t = useTranslations("platform.grid");
   const formatter = useFormatter();
   const updatedAt = new Date(resume.updatedAt);
-  const href = `/platform/editor/${resume.id}`;
+  const href = `/platform/editor?id=${resume.id}`;
 
   return (
     <Card size="sm" className="pt-0">
