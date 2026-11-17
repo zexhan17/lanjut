@@ -24,7 +24,6 @@ const geistMono = Geist_Mono({
 const jakarta = Plus_Jakarta_Sans({
   variable: "--font-brand",
   subsets: ["latin"],
-  weight: ["700", "800"],
 });
 
 const fraunces = Fraunces({
