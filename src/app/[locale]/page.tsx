@@ -8,7 +8,7 @@ import { LandingNavbar } from "@/components/landing/landing-navbar";
 import { LandingTryIt } from "@/components/landing/landing-try-it";
 import { LandingValues } from "@/components/landing/landing-values";
 import { StructuredData } from "@/components/shared/structured-data";
-import { type Locale, routing } from "@/i18n/routing";
+import type { Locale } from "@/i18n/routing";
 import { SITE } from "@/lib/site";
 
 export async function generateMetadata(props: {
@@ -19,11 +19,11 @@ export async function generateMetadata(props: {
 
   return {
     alternates: {
-      canonical: locale === routing.defaultLocale ? "/" : `/${locale}`,
+      canonical: `/${locale}`,
       languages: {
-        en: "/",
+        en: "/en",
         id: "/id",
-        "x-default": "/",
+        "x-default": "/en",
       },
     },
   };

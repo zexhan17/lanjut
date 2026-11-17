@@ -36,6 +36,8 @@ jobs:
       - run: pnpm validate:exports
 
       - run: pnpm build
+        env:
+          BASE_PATH: /lanjut
 
       - uses: actions/upload-pages-artifact@v3
         with:

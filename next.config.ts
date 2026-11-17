@@ -5,9 +5,7 @@ import createNextIntlPlugin from "next-intl/plugin";
 
 const withNextIntl = createNextIntlPlugin();
 
-const basePath =
-  process.env.BASE_PATH ??
-  (process.env.NODE_ENV === "production" ? "/lanjut" : "");
+const basePath = process.env.BASE_PATH ?? "";
 
 const nextConfig: NextConfig = {
   output: "export",

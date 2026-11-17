@@ -43,7 +43,7 @@ export async function generateMetadata(props: {
     creator: "Rizki Citra",
     openGraph: {
       type: "website",
-      url: locale === routing.defaultLocale ? "/" : `/${locale}`,
+      url: `/${locale}`,
       siteName: SITE.name,
       title: t("title"),
       description: t("description"),
